@@ -1,0 +1,2359 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>For Prasamsha</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,300..800&family=Karla:ital,wght@0,300..800;1,300..800&family=Caveat:wght@500;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --night: #1c1530;
+      --night-deep: #141024;
+      --panel: #292044;
+      --panel-soft: #332a52;
+      --blush: #f5a3b7;
+      --blush-deep: #e87f9c;
+      --gold: #f0c987;
+      --cream: #fbf3ee;
+      --lavender: #9d8fc0;
+      --line: rgba(157, 143, 192, .25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    html,
+    body {
+      height: 100%
+    }
+
+    body {
+      background: radial-gradient(120% 90% at 50% 0%, #251b42 0%, var(--night) 45%, var(--night-deep) 100%);
+      color: var(--cream);
+      font-family: 'Karla', sans-serif;
+      overflow: hidden;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: 'Bricolage Grotesque', sans-serif;
+      font-weight: 600;
+      letter-spacing: -.01em
+    }
+
+    .hand {
+      font-family: 'Caveat', cursive
+    }
+
+    /* ---------- stars & petals backdrop ---------- */
+    #sky {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none
+    }
+
+    .star {
+      position: absolute;
+      border-radius: 50%;
+      background: var(--cream);
+      opacity: .5;
+      animation: twinkle 3.5s ease-in-out infinite
+    }
+
+    @keyframes twinkle {
+
+      0%,
+      100% {
+        opacity: .15
+      }
+
+      50% {
+        opacity: .7
+      }
+    }
+
+    .petal {
+      position: fixed;
+      top: -30px;
+      z-index: 1;
+      pointer-events: none;
+      font-size: 18px;
+      opacity: .85;
+      animation: fall linear forwards
+    }
+
+    @keyframes fall {
+      0% {
+        transform: translateY(-5vh) translateX(0) rotate(0deg)
+      }
+
+      100% {
+        transform: translateY(110vh) translateX(var(--drift, 40px)) rotate(340deg)
+      }
+    }
+
+    /* ---------- screen router ---------- */
+    .screen {
+      position: fixed;
+      inset: 0;
+      z-index: 2;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 84px 20px 96px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(14px);
+      transition: opacity .55s ease, transform .55s ease, visibility .55s;
+      overflow-y: auto;
+    }
+
+    .screen.active {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0)
+    }
+
+    .inner {
+      width: 100%;
+      max-width: 640px;
+      margin: auto;
+      text-align: center;
+      flex-shrink: 0
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      letter-spacing: .24em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 14px;
+      font-weight: 700;
+    }
+
+    .screen h2 {
+      font-size: clamp(26px, 6vw, 38px);
+      margin-bottom: 10px;
+      color: var(--cream)
+    }
+
+    .lede {
+      color: var(--lavender);
+      font-size: 16px;
+      line-height: 1.65;
+      max-width: 480px;
+      margin: 0 auto 26px
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 13px 26px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: linear-gradient(135deg, var(--blush), var(--blush-deep));
+      color: #3a1220;
+      font-family: 'Karla', sans-serif;
+      font-weight: 700;
+      font-size: 15px;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 6px 22px rgba(232, 127, 156, .35);
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(232, 127, 156, .45)
+    }
+
+    .btn,
+    .chip,
+    .dot,
+    #musicBtn {
+      touch-action: manipulation
+    }
+
+    .btn.ghost {
+      background: transparent;
+      color: var(--cream);
+      box-shadow: none;
+      border: 1px solid var(--line)
+    }
+
+    .btn.ghost:hover {
+      border-color: var(--blush)
+    }
+
+    /* ---------- top bar ---------- */
+    #topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 6;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity .5s;
+      background: rgba(20, 16, 36, .94);
+      border-bottom: 1px solid var(--line);
+    }
+
+    #topbar.show {
+      opacity: 1;
+      visibility: visible
+    }
+
+    #brand {
+      font-family: 'Caveat', cursive;
+      font-size: 22px;
+      color: var(--blush)
+    }
+
+    #musicBtn {
+      border: 1px solid var(--line);
+      background: rgba(41, 32, 68, .75);
+      color: var(--cream);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 13px;
+      cursor: pointer;
+      font-family: 'Karla', sans-serif;
+      backdrop-filter: blur(6px);
+    }
+
+    /* ---------- bottom dots nav ---------- */
+    #dots {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 6;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+      padding: 16px 0 calc(22px + env(safe-area-inset-bottom));
+      background: linear-gradient(to top, rgba(20, 16, 36, .9), transparent);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity .5s;
+    }
+
+    #dots.show {
+      opacity: 1;
+      visibility: visible
+    }
+
+    .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--line);
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: all .3s
+    }
+
+    .dot.on {
+      background: var(--blush);
+      width: 26px;
+      border-radius: 6px
+    }
+
+    .dot:disabled {
+      cursor: default
+    }
+
+    /* ---------- 1 · envelope ---------- */
+    #s0 {
+      padding-top: 28px
+    }
+
+    .env-wrap {
+      position: relative;
+      width: min(330px, 86vw);
+      height: 225px;
+      margin: 26px auto 0;
+      cursor: pointer;
+      transition: transform .3s
+    }
+
+    .env-wrap:hover {
+      transform: scale(1.02)
+    }
+
+    .env-back {
+      position: absolute;
+      inset: 0;
+      background: #3a2f5e;
+      border-radius: 10px;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, .45)
+    }
+
+    .env-front {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 60%;
+      background: linear-gradient(160deg, #463871, #3a2f5e);
+      border-radius: 0 0 10px 10px;
+      z-index: 3;
+      clip-path: polygon(0 0, 50% 45%, 100% 0, 100% 100%, 0 100%)
+    }
+
+    .env-flap {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 52%;
+      background: linear-gradient(200deg, #544389, #463871);
+      z-index: 4;
+      transform-origin: top;
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      transition: transform .7s cubic-bezier(.4, 0, .2, 1), z-index .3s
+    }
+
+    .env-seal {
+      position: absolute;
+      z-index: 5;
+      top: 46%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, var(--blush), var(--blush-deep));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 4px 14px rgba(232, 127, 156, .5);
+      transition: opacity .4s
+    }
+
+    .env-letter {
+      position: absolute;
+      top: 12px;
+      left: 5%;
+      width: 90%;
+      background: var(--cream);
+      color: #4a3550;
+      border-radius: 8px;
+      z-index: 1;
+      padding: 26px 22px;
+      opacity: 0;
+      transition: all .8s cubic-bezier(.4, 0, .2, 1);
+      text-align: center
+    }
+
+    .env-letter p {
+      font-size: 15.5px;
+      line-height: 1.65
+    }
+
+    .env-letter .hand {
+      font-size: 26px;
+      color: var(--blush-deep);
+      display: block;
+      margin-bottom: 8px
+    }
+
+    .env-wrap.open .env-flap {
+      transform: rotateX(180deg);
+      z-index: 1
+    }
+
+    .env-wrap.open .env-seal {
+      opacity: 0
+    }
+
+    .env-wrap.open .env-letter {
+      transform: translateY(-135px);
+      opacity: 1;
+      z-index: 4;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, .35)
+    }
+
+    .tap-hint {
+      margin-top: 150px;
+      color: var(--lavender);
+      font-size: 13px;
+      letter-spacing: .08em;
+      animation: pulse 2s ease-in-out infinite
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: .45
+      }
+
+      50% {
+        opacity: 1
+      }
+    }
+
+    #enterBtn {
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity .6s .5s;
+      margin-top: 18px
+    }
+
+    .env-wrap.open~#enterBtn {
+      opacity: 1;
+      visibility: visible
+    }
+
+    .env-wrap.open~.tap-hint {
+      display: none
+    }
+
+    .title-name {
+      font-size: clamp(40px, 10vw, 64px);
+      color: var(--cream)
+    }
+
+    .title-name .a {
+      color: var(--blush)
+    }
+
+    /* ---------- 2 · two cities ---------- */
+    .clocks {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 24px
+    }
+
+    .clock {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 20px 26px;
+      min-width: 150px;
+    }
+
+    .clock .city {
+      font-size: 12px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 700
+    }
+
+    .clock .time {
+      font-family: 'Bricolage Grotesque';
+      font-size: 34px;
+      margin: 6px 0 2px
+    }
+
+    .clock .who {
+      font-family: 'Caveat';
+      font-size: 20px;
+      color: var(--blush)
+    }
+
+    .ritual {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 22px;
+      max-width: 480px;
+      margin: 0 auto 26px;
+      text-align: left;
+    }
+
+    .ritual .bubble {
+      display: inline-block;
+      padding: 9px 15px;
+      border-radius: 16px;
+      margin: 5px 0;
+      font-size: 14.5px;
+      max-width: 85%;
+    }
+
+    .ritual .me {
+      background: linear-gradient(135deg, var(--blush), var(--blush-deep));
+      color: #3a1220;
+      border-bottom-right-radius: 4px;
+      float: right;
+      clear: both
+    }
+
+    .ritual .note {
+      clear: both;
+      display: block;
+      padding-top: 12px;
+      color: var(--lavender);
+      font-size: 13.5px;
+      line-height: 1.6;
+      text-align: center
+    }
+
+    /* ---------- bridge map ---------- */
+    #bridge {
+      max-width: 480px;
+      margin: 0 auto 6px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 10px 10px 2px
+    }
+
+    #bridgeSvg {
+      width: 100%;
+      height: auto;
+      display: block
+    }
+
+    #arc {
+      filter: drop-shadow(0 0 6px rgba(245, 163, 183, .8));
+      animation: dashmove 1.6s linear infinite;
+      cursor: pointer;
+      pointer-events: none
+    }
+
+    #arcHit {
+      cursor: pointer
+    }
+
+    @keyframes dashmove {
+      to {
+        stroke-dashoffset: -14
+      }
+    }
+
+    .cityDot {
+      fill: var(--blush);
+      filter: drop-shadow(0 0 8px rgba(245, 163, 183, .9))
+    }
+
+    .cityDot.gold {
+      fill: var(--gold);
+      filter: drop-shadow(0 0 8px rgba(240, 201, 135, .9))
+    }
+
+    .faceRing {
+      fill: none;
+      stroke: var(--blush);
+      stroke-width: 2;
+      filter: drop-shadow(0 0 8px rgba(245, 163, 183, .8))
+    }
+
+    .faceRing.gold {
+      stroke: var(--gold);
+      filter: drop-shadow(0 0 8px rgba(240, 201, 135, .8))
+    }
+
+    .cityLbl {
+      fill: var(--lavender);
+      font-family: 'Karla';
+      font-size: 11.5px;
+      letter-spacing: .06em
+    }
+
+    .bridge-hint {
+      text-align: center;
+      color: var(--lavender);
+      font-size: 12px;
+      padding: 4px 0 10px;
+      animation: pulse 2s infinite
+    }
+
+    #bridgeLetter {
+      position: fixed;
+      inset: 0;
+      z-index: 9;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(20, 16, 36, .75);
+      backdrop-filter: blur(4px);
+      padding: 20px
+    }
+
+    #bridgeLetter.show {
+      display: flex
+    }
+
+    .bl-card {
+      position: relative;
+      background: var(--cream);
+      color: #4a3550;
+      border-radius: 16px;
+      max-width: 420px;
+      width: 100%;
+      padding: 30px 26px;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, .5);
+      text-align: left
+    }
+
+    .bl-title {
+      display: block;
+      font-size: 26px;
+      color: #c15577;
+      margin-bottom: 14px
+    }
+
+    .bl-line {
+      font-size: 15px;
+      line-height: 1.65;
+      margin-bottom: 12px;
+      opacity: 0;
+      transform: translateY(10px)
+    }
+
+    #bridgeLetter.show .bl-line {
+      animation: cascade .55s ease forwards
+    }
+
+    #bridgeLetter.show .bl-line:nth-child(3) {
+      animation-delay: .15s
+    }
+
+    #bridgeLetter.show .bl-line:nth-child(4) {
+      animation-delay: .55s
+    }
+
+    #bridgeLetter.show .bl-line:nth-child(5) {
+      animation-delay: .95s
+    }
+
+    #bridgeLetter.show .bl-line:nth-child(6) {
+      animation-delay: 1.35s
+    }
+
+    #bridgeLetter.show .bl-line:nth-child(7) {
+      animation-delay: 1.8s
+    }
+
+    @keyframes cascade {
+      to {
+        opacity: 1;
+        transform: none
+      }
+    }
+
+    #blClose {
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      border: none;
+      background: none;
+      font-size: 26px;
+      color: #b58ea6;
+      cursor: pointer
+    }
+
+    /* ---------- 3 · timeline ---------- */
+    .tl {
+      max-width: 520px;
+      margin: 0 auto;
+      text-align: left;
+      position: relative;
+      padding-left: 26px
+    }
+
+    .tl::before {
+      content: "";
+      position: absolute;
+      left: 7px;
+      top: 6px;
+      bottom: 6px;
+      width: 2px;
+      background: linear-gradient(var(--blush), var(--gold), var(--lavender))
+    }
+
+    .tl-item {
+      position: relative;
+      margin-bottom: 8px;
+      opacity: 0;
+      transform: translateX(-10px);
+      transition: all .5s ease;
+      cursor: pointer
+    }
+
+    .tl-item.seen {
+      opacity: 1;
+      transform: none
+    }
+
+    .tl-item::before {
+      content: "";
+      position: absolute;
+      left: -24px;
+      top: 8px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--blush);
+      box-shadow: 0 0 0 4px rgba(245, 163, 183, .2)
+    }
+
+    .tl-item .date {
+      font-size: 11px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-weight: 700
+    }
+
+    .tl-item h3 {
+      font-size: 18px;
+      margin: 3px 0 4px
+    }
+
+    .tl-item .more {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .45s ease;
+      color: var(--lavender);
+      font-size: 14.5px;
+      line-height: 1.6
+    }
+
+    .tl-item.openx .more {
+      max-height: 140px
+    }
+
+    .tl-item .hint {
+      font-size: 12px;
+      color: var(--lavender);
+      opacity: .7
+    }
+
+    .tl-item.openx .hint {
+      display: none
+    }
+
+    .tl-item {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px 16px;
+      margin-bottom: 12px
+    }
+
+    /* ---------- 4 · sorry ---------- */
+    .sorry-card {
+      background: var(--cream);
+      color: #4a3550;
+      border-radius: 18px;
+      padding: 26px 24px;
+      max-width: 500px;
+      margin: 0 auto 18px;
+      text-align: left;
+      box-shadow: 0 16px 44px rgba(0, 0, 0, .3);
+    }
+
+    .sorry-card h3 {
+      color: #8a4a63;
+      font-size: 15px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      margin-bottom: 12px
+    }
+
+    .sorry-card p {
+      font-size: 15.5px;
+      line-height: 1.7;
+      margin-bottom: 12px
+    }
+
+    .sorry-card p:last-child {
+      margin-bottom: 0
+    }
+
+    .sorry-sign {
+      font-family: 'Caveat';
+      font-size: 24px;
+      color: #c15577;
+      text-align: right;
+      display: block
+    }
+
+    /* ---------- 5 · open-when cards ---------- */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+      max-width: 560px;
+      margin: 0 auto 24px
+    }
+
+    .flip {
+      perspective: 1000px;
+      height: 190px;
+      cursor: pointer
+    }
+
+    .flip-in {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform .7s;
+      transform-style: preserve-3d
+    }
+
+    .flip.go .flip-in {
+      transform: rotateY(180deg)
+    }
+
+    .face {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      text-align: center
+    }
+
+    .face.f {
+      background: var(--panel);
+      border: 1px solid var(--line)
+    }
+
+    .face.f h3 {
+      font-size: 17px;
+      margin-bottom: 8px
+    }
+
+    .face.f span {
+      font-size: 12px;
+      color: var(--lavender)
+    }
+
+    .face.f .em {
+      font-size: 26px;
+      margin-bottom: 10px
+    }
+
+    .face.b {
+      background: linear-gradient(150deg, #f7d9e2, var(--cream));
+      color: #4a3550;
+      transform: rotateY(180deg);
+      overflow-y: auto
+    }
+
+    .face.b p {
+      font-size: 14.5px;
+      line-height: 1.6
+    }
+
+    /* ---------- 6 · garden ---------- */
+    #gardenBox {
+      position: relative;
+      max-width: 560px;
+      height: 300px;
+      margin: 0 auto 18px;
+      background: linear-gradient(to top, #241b3f 0%, #2c2250 55%, rgba(44, 34, 80, 0) 100%);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      cursor: pointer;
+      overflow: hidden;
+    }
+
+    #gardenBox::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 26px;
+      background: linear-gradient(to top, #1a1332, transparent);
+      border-radius: 0 0 20px 20px
+    }
+
+    #gardenHint {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--lavender);
+      font-size: 14px;
+      letter-spacing: .05em;
+      animation: pulse 2s infinite;
+      pointer-events: none
+    }
+
+    .flower {
+      position: absolute;
+      bottom: 8px;
+      transform-origin: bottom center;
+      animation: grow .9s cubic-bezier(.34, 1.56, .64, 1) forwards;
+      pointer-events: none
+    }
+
+    @keyframes grow {
+      0% {
+        transform: scale(0)
+      }
+
+      100% {
+        transform: scale(1)
+      }
+    }
+
+    .flower .stem {
+      width: 3px;
+      background: linear-gradient(#7ec98f, #4f9963);
+      margin: 0 auto;
+      border-radius: 3px
+    }
+
+    .flower .head {
+      font-size: 30px;
+      line-height: 1;
+      margin-bottom: -4px;
+      animation: sway 3.5s ease-in-out infinite
+    }
+
+    @keyframes sway {
+
+      0%,
+      100% {
+        transform: rotate(-6deg)
+      }
+
+      50% {
+        transform: rotate(6deg)
+      }
+    }
+
+    #reason {
+      min-height: 52px;
+      max-width: 480px;
+      margin: 0 auto 16px;
+      color: var(--gold);
+      font-family: 'Caveat';
+      font-size: 23px;
+      line-height: 1.35;
+      transition: opacity .4s;
+    }
+
+    /* ---------- 7 · polaroids ---------- */
+    #polaroidStack {
+      position: relative;
+      width: 290px;
+      height: 370px;
+      margin: 6px auto 20px;
+      cursor: pointer
+    }
+
+    .polaroid {
+      position: absolute;
+      inset: 0;
+      background: #fdfaf5;
+      border-radius: 6px;
+      padding: 14px 14px 54px;
+      box-shadow: 0 14px 36px rgba(0, 0, 0, .4);
+      transform: rotate(var(--tilt, 0deg)) translateY(var(--lift, 0px));
+      transition: transform .5s cubic-bezier(.34, 1.3, .64, 1), opacity .4s;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .polaroid .ph {
+      flex: 1;
+      border-radius: 3px;
+      overflow: hidden;
+      background: linear-gradient(150deg, #3a2f5e, #292044);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .polaroid .ph img,
+    .polaroid .ph video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block
+    }
+
+    .polaroid .ph .placeholder {
+      color: var(--lavender);
+      font-size: 14px;
+      text-align: center;
+      padding: 16px;
+      line-height: 1.6
+    }
+
+    .polaroid .ph .placeholder .em {
+      font-size: 34px;
+      display: block;
+      margin-bottom: 8px
+    }
+
+    .polaroid .cap {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 12px;
+      text-align: center;
+      font-family: 'Caveat';
+      font-size: 22px;
+      color: #6b5378;
+    }
+
+    .polaroid.fly {
+      transform: translateX(120%) rotate(18deg);
+      opacity: 0
+    }
+
+    #polCount {
+      color: var(--lavender);
+      font-size: 13px;
+      letter-spacing: .06em;
+      margin-bottom: 20px
+    }
+
+    /* ---------- record player ---------- */
+    #s7 {
+      position: relative
+    }
+
+    #slideshowBg {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 1.4s ease;
+      filter: blur(2px) brightness(.35) saturate(.9)
+    }
+
+    #player {
+      position: relative;
+      width: min(320px, 84vw);
+      height: min(320px, 84vw);
+      margin: 8px auto 4px;
+      background: #241b3f;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, .45)
+    }
+
+    #vinyl {
+      position: absolute;
+      left: 6%;
+      top: 9%;
+      width: 70%;
+      height: 82%;
+      aspect-ratio: 1;
+      border-radius: 50%;
+      background: repeating-radial-gradient(circle at 50% 50%, #171226 0 3px, #221a3a 3px 5px);
+      border: 2px solid #0f0b1d;
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    #player.playing #vinyl {
+      animation: spin 3.2s linear infinite
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg)
+      }
+    }
+
+    #vinylLabel {
+      width: 44%;
+      height: 44%;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, var(--blush), var(--blush-deep));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: #3a1220
+    }
+
+    #vinylLabel .hand {
+      font-size: 18px;
+      line-height: 1.05
+    }
+
+    #vinylLabel small {
+      font-size: 8px;
+      letter-spacing: .08em;
+      margin-top: 4px;
+      text-transform: uppercase;
+      font-weight: 700
+    }
+
+    #tonearm {
+      position: absolute;
+      right: 8%;
+      top: 10%;
+      width: 14px;
+      height: 62%;
+      transform-origin: 50% 12px;
+      transform: rotate(-32deg);
+      cursor: grab;
+      touch-action: none;
+      transition: transform .25s ease
+    }
+
+    #tonearm.drag {
+      transition: none;
+      cursor: grabbing
+    }
+
+    #armBase {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #8f7fc4, #544389);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, .5)
+    }
+
+    #armRod {
+      position: absolute;
+      top: 22px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 5px;
+      height: calc(100% - 34px);
+      background: linear-gradient(#b5a8dd, #6e5da5);
+      border-radius: 3px
+    }
+
+    #needleTip {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 14px;
+      height: 16px;
+      background: var(--gold);
+      border-radius: 3px 3px 6px 6px;
+      box-shadow: 0 2px 8px rgba(240, 201, 135, .5)
+    }
+
+    #playerHint {
+      color: var(--lavender);
+      font-size: 13px;
+      margin: 12px 0 4px;
+      animation: pulse 2s infinite
+    }
+
+    #playerMsg {
+      font-size: 24px;
+      color: var(--gold);
+      opacity: 0;
+      transition: opacity .8s;
+      margin-bottom: 16px
+    }
+
+    #s7.on #playerMsg {
+      opacity: 1
+    }
+
+    #nowPlaying {
+      display: none;
+      color: var(--blush);
+      font-size: 13px;
+      letter-spacing: .06em;
+      margin: 12px 0 4px
+    }
+
+    #s7.on #nowPlaying {
+      display: block
+    }
+
+    #s7.on #playerHint {
+      display: none
+    }
+
+    /* ---------- mood decoder ---------- */
+    #moodChips {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      max-width: 440px;
+      margin: 0 auto 18px
+    }
+
+    .chip {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--cream);
+      border-radius: 999px;
+      padding: 10px 18px;
+      font-size: 14.5px;
+      cursor: pointer;
+      font-family: 'Karla';
+      transition: all .2s;
+      touch-action: manipulation
+    }
+
+    .chip:hover {
+      border-color: var(--blush);
+      transform: translateY(-1px)
+    }
+
+    .chip.picked {
+      background: linear-gradient(135deg, var(--blush), var(--blush-deep));
+      color: #3a1220;
+      border-color: transparent;
+      font-weight: 700
+    }
+
+    #rxCard {
+      background: var(--cream);
+      color: #4a3550;
+      border-radius: 14px;
+      max-width: 440px;
+      margin: 0 auto;
+      padding: 18px 20px 14px;
+      text-align: left;
+      box-shadow: 0 16px 44px rgba(0, 0, 0, .3);
+      transition: opacity .4s, transform .4s
+    }
+
+    #rxCard.hidden {
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+      height: 0;
+      padding: 0;
+      overflow: hidden;
+      box-shadow: none
+    }
+
+    .rx-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      font-size: 11px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: #a06a84;
+      border-bottom: 1px dashed #dcc3cf;
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+      font-weight: 700;
+      flex-wrap: wrap
+    }
+
+    .rx-sym {
+      font-size: 14px;
+      margin-bottom: 8px
+    }
+
+    .rx-body {
+      font-size: 15px;
+      line-height: 1.7;
+      white-space: pre-line
+    }
+
+    .rx-sign {
+      text-align: right;
+      font-size: 22px;
+      color: #c15577;
+      margin-top: 10px
+    }
+
+    /* ---------- 8-bit quest ---------- */
+    #gameWrap {
+      position: relative;
+      max-width: 560px;
+      margin: 0 auto;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+      background: #120e22
+    }
+
+    #game {
+      display: block;
+      width: 100%;
+      height: auto;
+      image-rendering: pixelated;
+      cursor: pointer;
+      touch-action: manipulation
+    }
+
+    #gameOverlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: rgba(18, 14, 34, .88);
+      padding: 20px;
+      text-align: center
+    }
+
+    #gameOverlay.hide {
+      display: none
+    }
+
+    #goTitle {
+      font-size: 30px;
+      color: var(--gold)
+    }
+
+    #goText {
+      color: var(--lavender);
+      font-size: 14px;
+      line-height: 1.6;
+      max-width: 380px;
+      white-space: pre-line
+    }
+
+    /* ---------- 8 · finale ---------- */
+    .name-stretch {
+      font-family: 'Bricolage Grotesque';
+      font-size: clamp(30px, 8vw, 52px);
+      color: var(--cream);
+      margin-bottom: 6px;
+      word-break: break-all;
+      min-height: 64px
+    }
+
+    .name-stretch .a {
+      color: var(--blush)
+    }
+
+    .stretch-note {
+      color: var(--lavender);
+      font-size: 13px;
+      margin-bottom: 22px
+    }
+
+    #heartWrap {
+      margin: 6px auto 10px;
+      width: 130px;
+      height: 120px;
+      cursor: pointer;
+      position: relative;
+      user-select: none;
+      -webkit-user-select: none
+    }
+
+    #heartOutline,
+    #heartFill {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 104px;
+      line-height: 1
+    }
+
+    #heartOutline {
+      color: transparent;
+      -webkit-text-stroke: 2px var(--blush);
+      opacity: .85
+    }
+
+    #heartFill {
+      color: var(--blush-deep);
+      clip-path: inset(100% 0 0 0);
+      transition: clip-path .12s linear;
+      filter: drop-shadow(0 6px 18px rgba(232, 127, 156, .5))
+    }
+
+    #holdHint {
+      color: var(--lavender);
+      font-size: 13px;
+      letter-spacing: .06em;
+      animation: pulse 2s infinite
+    }
+
+    #finalMsg {
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all .7s ease;
+      margin-top: 8px
+    }
+
+    #finalMsg.show {
+      opacity: 1;
+      transform: none
+    }
+
+    #finalMsg .hand {
+      font-size: 30px;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 14px
+    }
+
+    @media (max-width:600px) {
+      .screen {
+        padding: 22px 14px 96px
+      }
+
+      .screen h2 {
+        font-size: clamp(24px, 7vw, 30px)
+      }
+
+      .lede {
+        font-size: 14.5px;
+        margin-bottom: 20px
+      }
+
+      .btn {
+        padding: 12px 20px;
+        font-size: 14px
+      }
+
+      .clocks {
+        gap: 10px
+      }
+
+      .clock {
+        padding: 14px 18px;
+        min-width: 126px
+      }
+
+      .clock .time {
+        font-size: 27px
+      }
+
+      .cards {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px
+      }
+
+      .flip {
+        height: 210px
+      }
+
+      .face {
+        padding: 12px
+      }
+
+      .face.f h3 {
+        font-size: 14.5px
+      }
+
+      .face.f .em {
+        font-size: 22px;
+        margin-bottom: 6px
+      }
+
+      .face.b p {
+        font-size: 12.8px;
+        line-height: 1.55
+      }
+
+      #gardenBox {
+        height: 250px
+      }
+
+      #reason {
+        font-size: 20px
+      }
+
+      .tl-item h3 {
+        font-size: 16px
+      }
+
+      #playerHint {
+        font-size: 12px
+      }
+
+      #brand {
+        font-size: 19px
+      }
+
+      #musicBtn {
+        font-size: 12px;
+        padding: 7px 11px
+      }
+
+      #goText {
+        font-size: 12.5px
+      }
+
+      .bl-card {
+        padding: 24px 20px
+      }
+
+      .bl-line {
+        font-size: 14px
+      }
+    }
+
+    @media (max-width:360px) {
+      .cards {
+        grid-template-columns: 1fr
+      }
+
+      .flip {
+        height: 170px
+      }
+
+      .face.b p {
+        font-size: 13.5px
+      }
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: .001s !important;
+        transition-duration: .15s !important
+      }
+
+      .petal {
+        display: none
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="sky"></div>
+
+  <div id="topbar">
+    <span id="brand">for prasamsha 🌸</span>
+    <button id="musicBtn">▶ music</button>
+  </div>
+  <audio id="bgMusic" loop src="the-man-who-cant-be-moved.mp3"></audio>
+  <audio id="goAway" loop src="go-away-weezer.mp3"></audio>
+
+  <!-- 1 · ENVELOPE -->
+  <section class="screen active" id="s0">
+    <div class="inner">
+      <h1 class="title-name">pras<span class="a">a</span>msh<span class="a">aaaa</span></h1>
+      <div class="env-wrap" id="envelope">
+        <div class="env-back"></div>
+        <div class="env-letter">
+          <span class="hand">hey cutiee,</span>
+          <p>someone made you a little corner of the internet. it's small, it's handmade, and every part of it is about
+            you. tap through when you're ready.</p>
+        </div>
+        <div class="env-front"></div>
+        <div class="env-flap"></div>
+        <div class="env-seal">🌸</div>
+      </div>
+      <p class="tap-hint">tap the envelope</p>
+      <button class="btn" id="enterBtn">open it up →</button>
+    </div>
+  </section>
+
+  <!-- MAP · FROM LINZ TO YOU -->
+  <section class="screen" id="sMap">
+    <div class="inner">
+      <p class="eyebrow">chapter one</p>
+      <h2>From Linz to you</h2>
+      <p class="lede">This is us on the map — me in Linz, you in Southampton. See the glowing line between us? <b>Tap
+          it.</b> There's a letter traveling on it right now.</p>
+      <div id="bridge">
+        <svg viewBox="0 0 400 190" id="bridgeSvg" aria-label="map from Linz to Southampton">
+          <defs>
+            <linearGradient id="lineGrad" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#f5a3b7" />
+              <stop offset="1" stop-color="#f0c987" />
+            </linearGradient>
+            <clipPath id="clipHer">
+              <circle cx="82" cy="66" r="17" />
+            </clipPath>
+            <clipPath id="clipMe">
+              <circle cx="318" cy="126" r="17" />
+            </clipPath>
+          </defs>
+          <path id="arc" d="M 82 60 Q 200 -14 318 120" fill="none" stroke="url(#lineGrad)" stroke-width="2.5"
+            stroke-dasharray="7 7" stroke-linecap="round" />
+          <path d="M 82 60 Q 200 -14 318 120" fill="none" stroke="rgba(245,163,183,.28)" stroke-width="9"
+            stroke-linecap="round" id="arcHit" />
+          <!-- her face pin (Southampton) -->
+          <circle cx="82" cy="66" r="6" class="cityDot" />
+          <circle cx="82" cy="66" r="18" class="faceRing" />
+          <image href="her-face.png" x="65" y="49" width="34" height="34" clip-path="url(#clipHer)"
+            preserveAspectRatio="xMidYMid slice" />
+          <!-- his face pin (Linz) -->
+          <circle cx="318" cy="126" r="6" class="cityDot gold" />
+          <circle cx="318" cy="126" r="18" class="faceRing gold" />
+          <image href="my-face.jpeg" x="301" y="109" width="34" height="34" clip-path="url(#clipMe)"
+            preserveAspectRatio="xMidYMid slice" />
+          <text x="82" y="102" class="cityLbl" text-anchor="middle">Southampton · her</text>
+          <text x="318" y="162" class="cityLbl" text-anchor="middle">Linz · me</text>
+          <g id="flyer"><text font-size="13" text-anchor="middle" dominant-baseline="middle">💌</text>
+            <animateMotion dur="5s" repeatCount="indefinite" rotate="auto" path="M 82 60 Q 200 -14 318 120"
+              keyPoints="1;0" keyTimes="0;1" calcMode="linear" />
+          </g>
+        </svg>
+        <p class="bridge-hint">👆 tap the glowing line to open the letter</p>
+      </div>
+      <div id="bridgeLetter">
+        <div class="bl-card">
+          <button id="blClose" aria-label="close">×</button>
+          <span class="hand bl-title">a note that crossed 1,200 km</span>
+          <p class="bl-line">Prasamsha —</p>
+          <p class="bl-line">I said things recently that were harsh and unfair, and I'm sorry. Not "sorry, but." Just
+            sorry.</p>
+          <p class="bl-line">This line on the map is the easy part. Being softer with you is the part I'm actually
+            working on.</p>
+          <p class="bl-line">Right now, this very second, someone in Linz is thinking about someone in Southampton.</p>
+          <p class="bl-line hand" style="font-size:22px;color:#c15577">— always, Gaurav</p>
+        </div>
+      </div>
+      <button class="btn" onclick="go(2)">next →</button>
+    </div>
+  </section>
+
+  <!-- 2 · TWO CITIES -->
+  <section class="screen" id="s1">
+    <div class="inner">
+      <p class="eyebrow">chapter two</p>
+      <h2>Two cities, one chat</h2>
+      <p class="lede">Your time and my time, side by side. No matter what the clocks say, we always find each other.</p>
+      <div class="clocks">
+        <div class="clock">
+          <div class="city">Linz</div>
+          <div class="time" id="clockAT">--:--</div>
+          <div class="who">where I am</div>
+        </div>
+        <div class="clock">
+          <div class="city">Southampton</div>
+          <div class="time" id="clockUK">--:--</div>
+          <div class="who">where you are</div>
+        </div>
+      </div>
+      <div class="ritual">
+        <span class="bubble me">Heyy good morning ☀️</span>
+        <span class="bubble me">Good night sweet dreams take careeee 🌙</span>
+        <span class="note">Sent at completely wrong hours, every single time — and I'd still rather say it at the wrong
+          hour than not say it at all.</span>
+      </div>
+      <button class="btn" onclick="go(3)">our story →</button>
+    </div>
+  </section>
+
+  <!-- 3 · TIMELINE -->
+  <section class="screen" id="s2">
+    <div class="inner">
+      <p class="eyebrow">chapter three</p>
+      <h2>Little moments I kept</h2>
+      <p class="lede">Tap each one — these are real dates. I checked.</p>
+      <div class="tl" id="tl">
+        <div class="tl-item">
+          <div class="date">April 8</div>
+          <h3>The reel era begins 📱</h3>
+          <p class="hint">tap</p>
+          <div class="more">
+            <p>Somewhere between a hundred Instagram reels, sending you funny things became my favorite hobby. My reels
+              tab is basically a folder called "things Prasamsha needs to see."</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="date">April 15</div>
+          <h3>The 88-minute call ☎️</h3>
+          <p class="hint">tap</p>
+          <div class="more">
+            <p>You called me. We talked for 88 minutes and it felt like 8. Then we called again. That was the day I knew
+              this wasn't just chatting anymore.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="date">April 18</div>
+          <h3>"you're my cutiee pieee" 🥧</h3>
+          <p class="hint">tap</p>
+          <div class="more">
+            <p>I said it. I meant it. I still mean it, even when you reply "Ok."</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="date">April 24</div>
+          <h3>"I really like you prasamsha" 💌</h3>
+          <p class="hint">tap</p>
+          <div class="more">
+            <p>Not my smoothest delivery, but the most honest thing I've typed. Still true.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="date">May 14</div>
+          <h3>Nepali sounds cuter on you 🇳🇵</h3>
+          <p class="hint">tap</p>
+          <div class="more">
+            <p>timi nepali ma bolda cute suninchau. Scientific fact. Peer reviewed by me.</p>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="date">Today</div>
+          <h3>Still here 🌙</h3>
+          <p class="hint">tap</p>
+          <div class="more">
+            <p>Through the good days and the messy ones — I'm still the guy who lights up when your name pops up on my
+              screen.</p>
+          </div>
+        </div>
+      </div>
+      <button class="btn" onclick="go(4)" style="margin-top:14px">something I need to say →</button>
+    </div>
+  </section>
+
+  <!-- 4 · SORRY -->
+  <section class="screen" id="s3">
+    <div class="inner">
+      <p class="eyebrow">chapter four</p>
+      <h2>What I understand now</h2>
+      <div class="sorry-card">
+        <h3>No excuses this time</h3>
+        <p>I said harsh things to you recently. Things you didn't deserve, in a tone you didn't deserve. I'm not going
+          to dress it up with "I was stressed" or "you made me feel" — there's no version of that day where I was right.
+          I'm sorry. Unconditionally. Full stop.</p>
+        <p>And here's the part I don't say enough: every single time I've messed up, you've been there to forgive me.
+          Every time. You never held it over my head, you just… let me be better. I don't take that for granted,
+          Prasamsha. I'm grateful for it more than you know — and I know forgiveness isn't something I get to keep
+          withdrawing like it's unlimited.</p>
+        <p>So no demands, no "do you even like me." Just this: you matter to me exactly as you are — short replies,
+          savage reels, and all.</p>
+        <span class="sorry-sign">— Gaurav</span>
+      </div>
+      <button class="btn" onclick="go(5)">okay, lighter stuff →</button>
+    </div>
+  </section>
+
+  <!-- 5 · OPEN WHEN -->
+  <section class="screen" id="s4">
+    <div class="inner">
+      <p class="eyebrow">chapter five</p>
+      <h2>Open when…</h2>
+      <p class="lede">Six little cards. Tap to flip. Save them for the right day.</p>
+      <div class="cards">
+        <div class="flip">
+          <div class="flip-in">
+            <div class="face f">
+              <div class="em">😤</div>
+              <h3>…you're mad at me</h3><span>tap to open</span>
+            </div>
+            <div class="face b">
+              <p>Even mid-argument, I'd still rather be disagreeing with you than getting along with anyone else. Also —
+                argue in Nepali if you want. It sounds cuter, remember?</p>
+            </div>
+          </div>
+        </div>
+        <div class="flip">
+          <div class="flip-in">
+            <div class="face f">
+              <div class="em">🌍</div>
+              <h3>…you miss me</h3><span>tap to open</span>
+            </div>
+            <div class="face b">
+              <p>Linz to Southampton is about 1,200 km. That's roughly 800 reels, or one very long call. We've already
+                proven we can do 88 minutes without noticing. Same sky, cutie.</p>
+            </div>
+          </div>
+        </div>
+        <div class="flip">
+          <div class="flip-in">
+            <div class="face f">
+              <div class="em">😂</div>
+              <h3>…you need a laugh</h3><span>tap to open</span>
+            </div>
+            <div class="face b">
+              <p>Check your DMs — I've probably already sent you a reel. If not, just say the word. Making you laugh is
+                my favorite job.</p>
+            </div>
+          </div>
+        </div>
+        <div class="flip">
+          <div class="flip-in">
+            <div class="face f">
+              <div class="em">💭</div>
+              <h3>…you doubt us</h3><span>tap to open</span>
+            </div>
+            <div class="face b">
+              <p>you're my perfect type 🫶🫶 — I said that on April 15 and nothing since has changed my mind. Not one
+                thing.</p>
+            </div>
+          </div>
+        </div>
+        <div class="flip">
+          <div class="flip-in">
+            <div class="face f">
+              <div class="em">🩺</div>
+              <h3>…placement wrecked you</h3><span>tap to open</span>
+            </div>
+            <div class="face b">
+              <p>You spend your days learning to take care of everyone else. Sit down, put on Weezer, breathe — and let
+                someone look after the future nurse for once. Southampton is lucky to have you.</p>
+            </div>
+          </div>
+        </div>
+        <div class="flip">
+          <div class="flip-in">
+            <div class="face f">
+              <div class="em">🔮</div>
+              <h3>…you remember what ChatGPT said about us</h3><span>tap to open</span>
+            </div>
+            <div class="face b">
+              <p>Remember when we asked that astrology app on ChatGPT about us — and it said our relationship would be
+                tough and we'd have to really work at it? Fine. Then let's work at it. I want to prove ChatGPT wrong,
+                with you.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="btn" onclick="go(6)">I grew you something →</button>
+    </div>
+  </section>
+
+  <!-- 6 · GARDEN -->
+  <section class="screen" id="s5">
+    <div class="inner">
+      <p class="eyebrow">chapter six</p>
+      <h2>Plant a garden</h2>
+      <p class="lede">Tap anywhere in the box. Every flower you plant blooms with a reason I like you.</p>
+      <div id="gardenBox">
+        <div id="gardenHint">tap the soil to plant 🌱</div>
+      </div>
+      <div id="reason">&nbsp;</div>
+      <button class="btn" onclick="go(7)">now, my favorite view →</button>
+    </div>
+  </section>
+
+  <!-- 7 · POLAROIDS -->
+  <section class="screen" id="s6p">
+    <div class="inner">
+      <p class="eyebrow">chapter seven</p>
+      <h2>Polaroids of you</h2>
+      <p class="lede">Tap the stack to flip through. Every single one is my favorite.</p>
+      <div id="polaroidStack"></div>
+      <p id="polCount"></p>
+      <button class="btn" onclick="go(8)">now, drop the needle →</button>
+    </div>
+  </section>
+
+  <!-- 8 · RECORD PLAYER -->
+  <section class="screen" id="s7">
+    <div id="slideshowBg"></div>
+    <div class="inner">
+      <p class="eyebrow">chapter eight</p>
+      <h2>Your song 🎸</h2>
+      <p class="lede">The music so far was just background. This record has <b>your</b> song on it — <b>Go Away by
+          Weezer</b>. Grab the arm on the right and drag it onto the record: the background music will fade out, and
+        your song will start.</p>
+      <div id="player">
+        <div id="vinyl">
+          <div id="vinylLabel"><span class="hand">go away<br>— weezer</span><small>side P · for prasamsha</small></div>
+        </div>
+        <div id="tonearm">
+          <div id="armBase"></div>
+          <div id="armRod"></div>
+          <div id="needleTip"></div>
+        </div>
+      </div>
+      <p id="playerHint">👆 touch the arm on the right, drag it onto the record, let go</p>
+      <p id="nowPlaying">🎵 now playing: Go Away — Weezer</p>
+      <p id="playerMsg" class="hand">right here, whenever you're ready, Prasamsha 🤍</p>
+      <button class="btn" onclick="go(9)">how are you feeling? →</button>
+    </div>
+  </section>
+
+  <!-- 9 · MOOD DECODER -->
+  <section class="screen" id="s8">
+    <div class="inner">
+      <p class="eyebrow">chapter nine</p>
+      <h2>A prescription, nurse 🩺</h2>
+      <p class="lede">You spend all day learning to look after other people. My turn. Tap how you're feeling right now
+        and I'll write you a little prescription.</p>
+      <div id="moodChips">
+        <button class="chip" data-m="happy">happy 😊</button>
+        <button class="chip" data-m="sad">sad 🥺</button>
+        <button class="chip" data-m="angry">angry with you 😤</button>
+        <button class="chip" data-m="annoyed">annoyed 🙄</button>
+        <button class="chip" data-m="tired">tired 😮‍💨</button>
+        <button class="chip" data-m="missing">missing you 👀</button>
+      </div>
+      <div id="rxCard" class="hidden">
+        <div class="rx-head"><span>Dr. Gaurav's Clinic · Linz</span><span>Patient: Prasamsha 🌸</span></div>
+        <div class="rx-sym"><b>You said:</b> <span id="rxMood"></span></div>
+        <div class="rx-body" id="rxBody"></div>
+        <div class="rx-sign hand">— prescribed with love, Gaurav</div>
+      </div>
+      <button class="btn" onclick="go(10)" style="margin-top:20px">final level →</button>
+    </div>
+  </section>
+
+  <!-- 10 · 8-BIT QUEST -->
+  <section class="screen" id="s9">
+    <div class="inner">
+      <p class="eyebrow">the final level</p>
+      <h2>Help me reach you 🕹️</h2>
+      <p class="lede">That's me in the pink shirt, running to you. The storm clouds are our fights — <b>tap the game to
+          jump over them</b>, grab 5 hearts on the way, and you'll find yourself waiting at the end.</p>
+      <div id="gameWrap">
+        <canvas id="game" width="320" height="180"></canvas>
+        <div id="gameOverlay">
+          <p id="goTitle" class="hand">ready?</p>
+          <p id="goText">tap anywhere on the game to jump.
+            the clouds are dramatic. so am I.</p>
+          <button class="btn" id="gameBtn">▶ start</button>
+        </div>
+      </div>
+      <button class="btn ghost" onclick="go(11)" style="margin-top:16px">skip to the ending →</button>
+    </div>
+  </section>
+
+  <!-- 11 · FINALE -->
+  <section class="screen" id="s6">
+    <div class="inner">
+      <p class="eyebrow">the last chapter</p>
+      <div class="name-stretch" id="nameStretch">pras<span class="a">a</span>msha</div>
+      <p class="stretch-note">(hold the heart — the a's stretch the way I actually type your name)</p>
+      <div id="heartWrap">
+        <div id="heartOutline">❤</div>
+        <div id="heartFill">❤</div>
+      </div>
+      <p id="holdHint">press &amp; hold the heart</p>
+      <div id="finalMsg">
+        <span class="hand">no pressure. no speeches. just this —</span>
+        <p class="lede" style="margin-bottom:22px">I like you, Prasamsha. On your terms, at your pace, in whatever
+          language you feel like using. Whenever you want to talk, I'm one message away.</p>
+        <a class="btn" href="https://wa.me/" target="_blank" rel="noopener">message me 💬</a>
+        <button class="btn ghost" onclick="restart()" style="margin-left:8px">replay 🌸</button>
+      </div>
+    </div>
+  </section>
+
+  <div id="dots"></div>
+
+  <script>
+    /* ---------- stars ---------- */
+    const sky = document.getElementById('sky');
+    for (let i = 0; i < 70; i++) {
+      const s = document.createElement('div'); s.className = 'star';
+      const size = Math.random() * 2.2 + .6;
+      s.style.cssText = `width:${size}px;height:${size}px;left:${Math.random() * 100}%;top:${Math.random() * 100}%;animation-delay:${Math.random() * 3}s`;
+      sky.appendChild(s);
+    }
+
+    /* ---------- falling petals ---------- */
+    const PETALS = ['🌸', '🌷', '💮', '🩷', '🌺'];
+    let petalTimer = null;
+    function spawnPetal() {
+      const p = document.createElement('div'); p.className = 'petal';
+      p.textContent = PETALS[Math.floor(Math.random() * PETALS.length)];
+      p.style.left = Math.random() * 100 + 'vw';
+      p.style.fontSize = (12 + Math.random() * 14) + 'px';
+      p.style.setProperty('--drift', (Math.random() * 120 - 60) + 'px');
+      p.style.animationDuration = (7 + Math.random() * 7) + 's';
+      document.body.appendChild(p);
+      setTimeout(() => p.remove(), 15000);
+    }
+    function startPetals() { if (!petalTimer && !matchMedia('(prefers-reduced-motion: reduce)').matches) { petalTimer = setInterval(spawnPetal, 900); } }
+
+    /* ---------- router ---------- */
+    const screens = [...document.querySelectorAll('.screen')];
+    const dotsBox = document.getElementById('dots');
+    let unlocked = 0, current = 0;
+    screens.forEach((_, i) => {
+      const d = document.createElement('button'); d.className = 'dot'; d.disabled = true;
+      d.addEventListener('click', () => { if (i <= unlocked) go(i); });
+      dotsBox.appendChild(d);
+    });
+    const dots = [...dotsBox.children];
+    function go(i) {
+      screens[current].classList.remove('active');
+      current = i; unlocked = Math.max(unlocked, i);
+      screens[i].classList.add('active');
+      screens[i].scrollTop = 0;
+      dots.forEach((d, j) => { d.classList.toggle('on', j === i); d.disabled = j > unlocked; });
+      if (i > 0) { document.getElementById('topbar').classList.add('show'); dotsBox.classList.add('show'); }
+      if (i === 3) revealTimeline();
+    }
+    function restart() {
+      unlocked = screens.length - 1;
+      tlShown = false;
+      document.querySelectorAll('.tl-item').forEach(el => el.classList.remove('seen', 'openx'));
+      go(1);
+    }
+    dots[0].classList.add('on');
+
+    /* ---------- envelope ---------- */
+    const env = document.getElementById('envelope');
+    env.addEventListener('click', () => {
+      env.classList.add('open'); startPetals();
+      if (music.paused) {
+        fadeIn(music, BG_VOL);                 // gentle fade-in at background volume
+        musicBtn.textContent = '\u23f8 music'; // keeps the header button in sync
+      }
+    });
+    document.getElementById('enterBtn').addEventListener('click', () => go(1));
+
+    /* ---------- music ---------- */
+    const music = document.getElementById('bgMusic');
+    const musicBtn = document.getElementById('musicBtn');
+    const BG_VOL = .28;   // background song volume
+    const VINYL_VOL = .5; // her song on the vinyl
+    const fades = new Map();
+    function fadeTo(audio, target, ms, thenPause) {
+      clearInterval(fades.get(audio));
+      const steps = 20, step = (target - audio.volume) / steps;
+      let n = 0;
+      const t = setInterval(() => {
+        n++; audio.volume = Math.min(1, Math.max(0, audio.volume + step));
+        if (n >= steps) {
+          clearInterval(t); audio.volume = target;
+          if (thenPause) audio.pause();
+        }
+      }, (ms || 900) / steps);
+      fades.set(audio, t);
+    }
+    function fadeIn(audio, target) {
+      audio.volume = 0;
+      audio.play().catch(() => { });
+      fadeTo(audio, target);
+    }
+    function fadeOutPause(audio) { if (!audio.paused) fadeTo(audio, 0, 700, true); }
+    musicBtn.addEventListener('click', () => {
+      if (music.paused) {
+        goAwayStop();
+        fadeIn(music, BG_VOL);
+        musicBtn.textContent = '\u23f8 music';
+      }
+      else { fadeOutPause(music); musicBtn.textContent = '\u25b6 music'; }
+    });
+    function goAwayStop() {
+      const g = document.getElementById('goAway');
+      if (g && !g.paused) { fadeOutPause(g); document.getElementById('player').classList.remove('playing'); }
+    }
+
+    /* ---------- clocks ---------- */
+    function tick() {
+      const opt = { hour: '2-digit', minute: '2-digit', hour12: false };
+      try {
+        document.getElementById('clockAT').textContent = new Intl.DateTimeFormat('en-GB', { ...opt, timeZone: 'Europe/Vienna' }).format(new Date());
+        document.getElementById('clockUK').textContent = new Intl.DateTimeFormat('en-GB', { ...opt, timeZone: 'Europe/London' }).format(new Date());
+      } catch (e) { }
+    }
+    tick(); setInterval(tick, 15000);
+
+    /* ---------- timeline ---------- */
+    let tlShown = false;
+    function revealTimeline() {
+      if (tlShown) return; tlShown = true;
+      document.querySelectorAll('.tl-item').forEach((el, i) => setTimeout(() => el.classList.add('seen'), 150 * i + 200));
+    }
+    document.querySelectorAll('.tl-item').forEach(el => el.addEventListener('click', () => el.classList.toggle('openx')));
+
+    /* ---------- flip cards ---------- */
+    document.querySelectorAll('.flip').forEach(c => c.addEventListener('click', () => c.classList.toggle('go')));
+
+    /* ---------- garden ---------- */
+    const REASONS = [
+      "the way you say 'morning' no matter what my clock says ☀️",
+      "your laugh on those calls — 88 minutes felt like 8",
+      "timi nepali ma bolda cute suninchau 🇳🇵",
+      "your savage one-word replies. yes, even 'Ok.'",
+      "you send reels that are somehow funnier than mine",
+      "you're honest with me even when it's not what I want to hear",
+      "you're my perfect type 🫶🫶 — april 15, still true",
+      "you forgive me every single time, even when I don't deserve it 🤍",
+      "you're going to be an amazing nurse — Southampton has no idea yet 🩺",
+      "even the stars said we'd have to work at it — worth it 🔮",
+      "the way you put up with me being dramatic 😭",
+    ];
+    const HEADS = ['🌸', '🌷', '🌼', '🌺', '💐', '🌻', '🪷', '🌹'];
+    const gBox = document.getElementById('gardenBox');
+    const gHint = document.getElementById('gardenHint');
+    const reason = document.getElementById('reason');
+    let planted = 0;
+    gBox.addEventListener('click', e => {
+      const rect = gBox.getBoundingClientRect();
+      const x = Math.min(Math.max(e.clientX - rect.left, 20), rect.width - 20);
+      const f = document.createElement('div'); f.className = 'flower';
+      const h = 50 + Math.random() * 90;
+      f.style.left = (x - 16) + 'px';
+      f.innerHTML = `<div class="head">${HEADS[planted % HEADS.length]}</div><div class="stem" style="height:${h}px"></div>`;
+      gBox.appendChild(f);
+      gHint.style.display = 'none';
+      reason.style.opacity = 0;
+      const msg = REASONS[planted % REASONS.length];
+      setTimeout(() => { reason.textContent = msg; reason.style.opacity = 1; }, 250);
+      planted++;
+    });
+
+    /* ---------- polaroids ----------
+       HOW TO ADD HER PICTURES:
+       1. Put the image files in the SAME FOLDER as this index.html
+          (e.g. photo1.jpg, photo2.jpg ...)
+       2. List them below with a caption each. Add or remove lines freely.
+       That's it — the stack builds itself. Missing files show a cute
+       placeholder instead of breaking, so you can test anytime.        */
+    /* Videos work too! Just use a .mp4 or .webm filename below —
+       e.g. {src:'clip1.mp4', cap:'that day 😭'} — it will autoplay
+       silently in the polaroid frame, looping like a live photo.   */
+    const PHOTOS = [
+      { src: 'photo1.png', cap: 'my cutiee pieee 🥧' },
+      { src: 'photo2.png', cap: 'too pretty to care 🫶' },
+      { src: '0707.mov', cap: 'the smile that started it all' },
+      { src: 'photo4.png', cap: 'timi nepali ma bolda… 🌸' },
+      { src: '7071.mp4', cap: 'my perfect type. proof.' },
+    ];
+    const stack = document.getElementById('polaroidStack');
+    const polCount = document.getElementById('polCount');
+    let polOrder = [];
+    const loadedPhotos = [];
+    function buildStack() {
+      stack.innerHTML = '';
+      polOrder = PHOTOS.map((_, i) => i);
+      PHOTOS.forEach((p, i) => {
+        const card = document.createElement('div'); card.className = 'polaroid'; card.dataset.idx = i;
+        const ph = document.createElement('div'); ph.className = 'ph';
+        const isVideo = /\.(mp4|webm|mov|m4v)$/i.test(p.src);
+        let media;
+        if (isVideo) {
+          media = document.createElement('video');
+          media.src = p.src;
+          media.muted = true; media.loop = true; media.autoplay = true;
+          media.playsInline = true; media.setAttribute('playsinline', '');
+        } else {
+          media = new Image(); media.alt = p.cap;
+          media.src = p.src;
+          media.onload = () => { if (!loadedPhotos.includes(p.src)) loadedPhotos.push(p.src); };
+        }
+        media.onerror = () => { ph.innerHTML = `<div class="placeholder"><span class="em">🌸</span>drop <b>${p.src}</b> next to this file and I'll appear here</div>`; };
+        ph.appendChild(media);
+        const cap = document.createElement('div'); cap.className = 'cap'; cap.textContent = p.cap;
+        card.appendChild(ph); card.appendChild(cap);
+        stack.appendChild(card);
+      });
+      layoutStack();
+    }
+    function layoutStack() {
+      polOrder.forEach((idx, pos) => {
+        const card = stack.querySelector(`[data-idx="${idx}"]`);
+        const depth = polOrder.length - 1 - pos; // 0 = top
+        card.style.zIndex = pos + 1;
+        card.style.setProperty('--tilt', (depth === 0 ? 0 : (idx % 2 ? 1 : -1) * (2 + depth * 1.5)) + 'deg');
+        card.style.setProperty('--lift', (-depth * 4) + 'px');
+      });
+      const topIdx = polOrder[polOrder.length - 1];
+      polCount.textContent = `${topIdx + 1} / ${PHOTOS.length} · tap for the next one`;
+    }
+    stack.addEventListener('click', () => {
+      if (polOrder.length < 2) return;
+      const topIdx = polOrder.pop();
+      const card = stack.querySelector(`[data-idx="${topIdx}"]`);
+      card.classList.add('fly');
+      setTimeout(() => {
+        polOrder.unshift(topIdx);
+        card.classList.remove('fly');
+        layoutStack();
+      }, 420);
+    });
+    buildStack();
+
+    /* ---------- bridge letter ---------- */
+    const bridgeLetter = document.getElementById('bridgeLetter');
+    document.getElementById('arcHit').addEventListener('click', () => {
+      bridgeLetter.classList.remove('show'); void bridgeLetter.offsetWidth;
+      bridgeLetter.classList.add('show');
+    });
+    document.getElementById('blClose').addEventListener('click', () => bridgeLetter.classList.remove('show'));
+    bridgeLetter.addEventListener('click', e => { if (e.target === bridgeLetter) bridgeLetter.classList.remove('show') });
+
+    /* ---------- record player ---------- */
+    const s7 = document.getElementById('s7');
+    const arm = document.getElementById('tonearm');
+    const playerBox = document.getElementById('player');
+    const slideBg = document.getElementById('slideshowBg');
+    const REST = -32, ON = 8;
+    let armAngle = REST, dragging = false, slideTimer = null, slideIdx = 0;
+    function setArm(a) { armAngle = a; arm.style.transform = `rotate(${a}deg)`; }
+    function armPointer(e) {
+      const r = playerBox.getBoundingClientRect();
+      const px = r.right - r.width * 0.10, py = r.top + r.height * 0.13; // pivot approx
+      const x = (e.touches ? e.touches[0].clientX : e.clientX) - px;
+      const y = (e.touches ? e.touches[0].clientY : e.clientY) - py;
+      let a = Math.atan2(x, y) * -180 / Math.PI; // 0 = straight down
+      a = Math.max(REST, Math.min(20, a));
+      setArm(a);
+    }
+    arm.addEventListener('pointerdown', e => { e.preventDefault(); dragging = true; arm.classList.add('drag'); arm.setPointerCapture(e.pointerId); });
+    arm.addEventListener('pointermove', e => { if (dragging) armPointer(e); });
+    arm.addEventListener('pointerup', () => {
+      dragging = false; arm.classList.remove('drag');
+      if (armAngle > -8) { setArm(ON); startVinyl(); } else setArm(REST);
+    });
+    const goAway = document.getElementById('goAway');
+    function startVinyl() {
+      if (playerBox.classList.contains('playing')) return;
+      playerBox.classList.add('playing'); s7.classList.add('on');
+      fadeOutPause(music); musicBtn.textContent = '\u25b6 music';
+      goAway.currentTime = 0;
+      fadeIn(goAway, VINYL_VOL);
+      startSlides();
+    }
+    function startSlides() {
+      if (slideTimer || loadedPhotos.length === 0) return;
+      const show = () => { slideBg.style.backgroundImage = `url("${loadedPhotos[slideIdx % loadedPhotos.length]}")`; slideBg.style.opacity = 1; slideIdx++; };
+      show(); slideTimer = setInterval(show, 4200);
+    }
+
+    /* ---------- mood decoder ---------- */
+    const RX = {
+      happy: "Rx:\n\u2022 Keep doing whatever you're doing \u2014 it's working. \ud83d\udc9b\n\u2022 • Tell me about it. I want to hear the whole story.\n\u2022 Side effect: I smile too. Every time you're happy, I am.",
+      sad: "Rx:\n\u2022 One (1) very long hug \u2014 virtual for now, real one owed.\n\u2022 Go Away by Weezer, played loud.\n\u2022 And this: if I'm the reason, I'm sorry. If I'm not, tell me who to fight. \ud83e\udd0d",
+      angry: "Rx:\n\u2022 You're allowed to be. I said harsh things and I'm sorry \u2014 no excuses, no 'but'.\n\u2022 Take all the time you need.\n\u2022 I'll be here when you're ready. That part doesn't change.",
+      annoyed: "Rx:\n\u2022 One (1) Gaurav, sitting quietly and listening. \ud83e\udd10\n\u2022 You may send one savage reel at me, free of charge.\n\u2022 Repeat as needed.",
+      tired: "Rx:\n\u2022 Rest. Real rest \u2014 you look after everyone else all day.\n\u2022 Water, snacks, blanket, Weezer.\n\u2022 Reply to nobody. Not even me. I'll still be here tomorrow. \ud83c\udf19",
+      missing: "Rx:\n\u2022 One (1) phone call \u2014 you know I pick up on the first ring.\n\u2022 Until then: same sky over Linz and Southampton.\n\u2022 Warning: I miss you more. That's just medical fact. \ud83e\ude7a",
+    };
+    const rxCard = document.getElementById('rxCard');
+    const rxMood = document.getElementById('rxMood');
+    const rxBody = document.getElementById('rxBody');
+    document.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => {
+      document.querySelectorAll('.chip').forEach(x => x.classList.remove('picked'));
+      c.classList.add('picked');
+      rxMood.textContent = c.textContent;
+      rxBody.textContent = RX[c.dataset.m];
+      rxCard.classList.remove('hidden');
+    }));
+
+    /* ---------- 8-bit quest ---------- */
+    const cv = document.getElementById('game'), ctx = cv.getContext('2d');
+    const overlay = document.getElementById('gameOverlay'), goTitle = document.getElementById('goTitle'), goText = document.getElementById('goText'), gameBtn = document.getElementById('gameBtn');
+    ctx.imageSmoothingEnabled = false;
+    const G = { run: false, t: 0, speed: 2.1, px: 44, py: 0, vy: 0, ground: 150, jumping: false, hearts: 0, need: 5, objs: [], spawn: 0, goal: null, won: false, msg: '', msgT: 0 };
+    function resetGame() { Object.assign(G, { run: true, t: 0, px: 44, py: G.ground, vy: 0, jumping: false, hearts: 0, objs: [], spawn: 60, goal: null, won: false, msg: '', msgT: 0 }); overlay.classList.add('hide'); loopGame(); }
+    function jump() { if (G.run && !G.jumping) { G.vy = -6.4; G.jumping = true; } }
+    cv.addEventListener('pointerdown', jump);
+    window.addEventListener('keydown', e => { if (e.code === 'Space' && screens[current] && screens[current].id === 's9') { e.preventDefault(); jump(); } });
+    gameBtn.addEventListener('click', resetGame);
+    function px(x, y, w, h, c) { ctx.fillStyle = c; ctx.fillRect(Math.round(x), Math.round(y), w, h); }
+    function drawHeart(x, y, c = '#ff5d8f') { px(x + 2, y, 4, 2, c); px(x + 8, y, 4, 2, c); px(x, y + 2, 14, 4, c); px(x + 2, y + 6, 10, 2, c); px(x + 4, y + 8, 6, 2, c); px(x + 6, y + 10, 2, 2, c); }
+    function drawCloud(x, y) { px(x, y + 4, 26, 10, '#5a5470'); px(x + 4, y, 18, 6, '#6a6384'); px(x + 10, y + 14, 3, 5, '#ffe27a'); px(x + 8, y + 19, 3, 4, '#ffe27a'); }
+    function drawGaurav(x, y) { px(x + 2, y - 16, 8, 6, '#f2c49b'); px(x + 2, y - 18, 8, 3, '#2b2140'); px(x, y - 10, 12, 8, '#e87f9c'); const leg = (Math.floor(G.t / 6) % 2) ? 2 : 0; px(x + 1, y - 2, 3, 4 + leg, '#4a3550'); px(x + 8, y - 2, 3, 6 - leg, '#4a3550'); }
+    function drawP(x, y) { px(x + 2, y - 16, 8, 6, '#f2c49b'); px(x, y - 19, 12, 4, '#241a38'); px(x, y - 10, 12, 10, '#9d8fc0'); drawHeart(x - 1, y - 30, '#f0c987'); }
+    function loopGame() {
+      if (!G.run) return;
+      G.t++;
+      // physics
+      G.vy += 0.34; G.py += G.vy;
+      if (G.py >= G.ground) { G.py = G.ground; G.vy = 0; G.jumping = false; }
+      // spawn
+      if (!G.goal) {
+        G.spawn--;
+        if (G.spawn <= 0) {
+          if (Math.random() < 0.45) G.objs.push({ t: 'c', x: 340, y: G.ground - 14 });
+          else G.objs.push({ t: 'h', x: 340, y: G.ground - 46 - Math.random() * 26 });
+          G.spawn = 55 + Math.random() * 50;
+        }
+        if (G.hearts >= G.need) G.goal = { x: 360 };
+      } else G.goal.x -= G.speed;
+      G.objs.forEach(o => o.x -= G.speed);
+      G.objs = G.objs.filter(o => o.x > -30);
+      // collisions
+      const pr = { x: G.px, y: G.py - 18, w: 12, h: 20 };
+      G.objs = G.objs.filter(o => {
+        const ow = o.t === 'c' ? 26 : 14, oh = o.t === 'c' ? 18 : 12;
+        const hitb = pr.x < o.x + ow && pr.x + pr.w > o.x && pr.y < o.y + oh && pr.y + pr.h > o.y;
+        if (hitb) {
+          if (o.t === 'h') { G.hearts++; G.msg = '+1 🤍'; G.msgT = 40; }
+          else { G.msg = 'ouch — an argument! we bounce back'; G.msgT = 70; if (G.hearts > 0) G.hearts--; }
+          return false;
+        }
+        return true;
+      });
+      if (G.goal && G.goal.x < G.px + 18) { winGame(); return; }
+      // draw
+      ctx.fillStyle = '#1a1332'; ctx.fillRect(0, 0, 320, 180);
+      for (let i = 0; i < 14; i++)px((i * 53 + G.t * 0.2) % 330 - 5, (i * 37) % 120 + 8, 2, 2, '#3d3266');
+      px(0, G.ground + 4, 320, 26, '#241b3f'); px(0, G.ground + 4, 320, 3, '#544389');
+      G.objs.forEach(o => o.t === 'c' ? drawCloud(o.x, o.y) : drawHeart(o.x, o.y));
+      if (G.goal) drawP(G.goal.x, G.ground + 2);
+      drawGaurav(G.px, G.py + 2);
+      ctx.fillStyle = '#f0c987'; ctx.font = '10px monospace';
+      ctx.fillText(`hearts ${G.hearts}/${G.need}`, 8, 14);
+      if (G.msgT > 0) { G.msgT--; ctx.fillStyle = '#fbf3ee'; ctx.fillText(G.msg, 8, 30); }
+      requestAnimationFrame(loopGame);
+    }
+    function winGame() {
+      G.run = false; G.won = true;
+      goTitle.textContent = 'you made it. we made it. 💖';
+      goText.textContent = 'I jumped over every storm cloud to get to you — and that\'s the plan in real life too.\n\nI\'m sorry for the harsh words I said. No ifs, no buts.\nAnd thank you for forgiving me, every single time. I don\'t take that for granted anymore.';
+      gameBtn.textContent = '↻ play again';
+      document.querySelector('#s9 .btn.ghost').textContent = 'claim your prize →';
+      overlay.classList.remove('hide');
+    }
+
+    /* ---------- finale: hold heart + name stretch ---------- */
+    const fill = document.getElementById('heartFill');
+    const heart = document.getElementById('heartWrap');
+    const nameEl = document.getElementById('nameStretch');
+    const finalMsg = document.getElementById('finalMsg');
+    const holdHint = document.getElementById('holdHint');
+    let prog = 0, holding = false, raf = null, done = false;
+    function renderName() {
+      const extra = Math.round(prog / 8);
+      nameEl.innerHTML = 'pras<span class="a">a</span>msh<span class="a">' + 'a'.repeat(1 + extra) + '</span>' + (done ? ' 💖' : '');
+    }
+    function loop() {
+      if (holding && prog < 100) prog = Math.min(100, prog + 1.4);
+      else if (!holding && !done) prog = Math.max(0, prog - 2.5);
+      fill.style.clipPath = `inset(${100 - prog}% 0 0 0)`;
+      renderName();
+      if (prog >= 100 && !done) { done = true; celebrate(); return; }
+      if (prog > 0 || holding) raf = requestAnimationFrame(loop); else raf = null;
+    }
+    function startHold(e) { if (done) return; e.preventDefault(); holding = true; if (!raf) raf = requestAnimationFrame(loop); }
+    function endHold() { holding = false; }
+    heart.addEventListener('mousedown', startHold); heart.addEventListener('touchstart', startHold, { passive: false });
+    window.addEventListener('mouseup', endHold); window.addEventListener('touchend', endHold);
+    function celebrate() {
+      fill.style.clipPath = 'inset(0 0 0 0)';
+      holdHint.style.display = 'none';
+      finalMsg.classList.add('show');
+      renderName();
+      for (let i = 0; i < 26; i++) setTimeout(spawnPetal, i * 70);
+    }
+  </script>
+</body>
+
+</html>
