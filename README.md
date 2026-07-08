@@ -4,6 +4,10 @@
 
 This project is a single-file, dependency-free interactive webpage designed for a specific person. It takes the user on a journey through different "chapters," featuring interactive elements, mini-games, and personalized messages.
 
+## 🔗 Live Demo
+You can view the live project here:  
+👉 **[mylove.gauravadhikari.info.np](https://mylove.gauravadhikari.info.np)**
+
 ## ✨ Features
 
 This isn't just a static page; it's heavily interactive. Here is a breakdown of the "chapters":
@@ -38,7 +42,8 @@ Because this is vanilla web tech, you don't need a build step.
 ### 📂 Required Assets
 To make this work locally without broken links, you need to add a few of your own files into the same folder as `index.html`:
 
-* **Audio:** * `the-man-who-cant-be-moved.mp3` (Background track)
+* **Audio:** 
+    * `the-man-who-cant-be-moved.mp3` (Background track)
     * `go-away-weezer.mp3` (Vinyl record track)
 * **Images/Video (for the map and polaroids):**
     * `her-face.png`
