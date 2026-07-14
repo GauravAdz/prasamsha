@@ -2332,7 +2332,7 @@
     let prog = 0, holding = false, raf = null, done = false;
     function renderName() {
       const extra = Math.round(prog / 8);
-      nameEl.innerHTML = 'my<span class="a">a</span>lov<span class="a">' + 'e'.repeat(1 + extra) + '</span>' + (done ? ' 💖' : '');
+      nameEl.innerHTML = 'my <span class="a">lov</span>e<span class="a">' + 'e'.repeat(1 + extra) + '</span>' + (done ? ' 💖' : '');
     }
     function loop() {
       if (holding && prog < 100) prog = Math.min(100, prog + 1.4);
